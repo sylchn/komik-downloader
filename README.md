@@ -2,7 +2,7 @@
 
 A powerful, high-performance Python manga downloader and PDF generator supporting multiple Indonesian manga sites with Cloudflare bypass, multithreading, and Google Colab integration.
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sylchn/komik-downloader/blob/main/multi_downloader_colab.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sylchn/komik-downloader/blob/main/downloader_colab.ipynb)
 
 ---
 
@@ -13,7 +13,7 @@ A powerful, high-performance Python manga downloader and PDF generator supportin
 - 📄 **Automatic PDF Generation**: Merges downloaded chapter images into clean PDF documents automatically.
 - 🔓 **Cloudflare Bypass**: Built-in TLS fingerprinting bypass (`curl_cffi`) for protected sites like Shinigami.
 - 🖥️ **Interactive Menu & CLI**: User-friendly terminal interface or CLI arguments for automation.
-- 📓 **Google Colab Direct Badge**: Click the "Open In Colab" badge to launch `multi_downloader_colab.ipynb` directly in Colab and save PDFs to Google Drive.
+- 📓 **Google Colab Direct Badge**: Click the "Open In Colab" badge to launch `downloader_colab.ipynb` directly in Colab and save PDFs to Google Drive.
 - 📝 **Activity Logging**: Saves all user inputs, download progress, and results to `scraper.log`.
 
 ---
@@ -31,7 +31,7 @@ A powerful, high-performance Python manga downloader and PDF generator supportin
 
 Click the badge below to open the notebook directly in Google Colab:
 
-[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sylchn/komik-downloader/blob/main/multi_downloader_colab.ipynb)
+[![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/sylchn/komik-downloader/blob/main/downloader_colab.ipynb)
 
 ---
 

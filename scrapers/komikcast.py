@@ -1,7 +1,7 @@
 import os
 import re
 import shutil
-import requests
+from curl_cffi import requests as curl_requests
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from tqdm import tqdm
 from .base import BaseScraper, sanitize_folder_name, convert_folder_to_pdf, logger
@@ -18,19 +18,23 @@ class KomikcastScraper(BaseScraper):
     
     SITE_NAME = "Komikcast"
     
+    def __init__(self, output_dir="download", max_workers=5):
+        super().__init__(output_dir=output_dir, max_workers=max_workers)
+        self.session = curl_requests.Session(impersonate="chrome120")
+    
     @staticmethod
     def extract_slug(input_str):
-        """Extract series slug from URL or raw slug string."""
+        """Extract series slug from URL (supporting series/ or komik/) or raw slug string."""
         input_str = input_str.strip()
-        match = re.search(r'series/([^/]+)', input_str)
+        match = re.search(r'(?:series|komik)/([^/]+)', input_str)
         if match:
             return match.group(1)
-        return input_str.rstrip('/')
+        return input_str.rstrip('/').split('/')[-1]
 
     def get_series_info(self, url_or_slug):
         slug = self.extract_slug(url_or_slug)
         url = f"{BASE_API_URL}/series/{slug}"
-        res = requests.get(url, headers=DEFAULT_HEADERS, timeout=10)
+        res = self.session.get(url, headers=DEFAULT_HEADERS, timeout=10)
         if res.status_code != 200:
             raise Exception(f"Failed to fetch series info for '{slug}'. HTTP {res.status_code}")
         
@@ -47,7 +51,7 @@ class KomikcastScraper(BaseScraper):
 
     def get_chapter_list(self, slug):
         url = f"{BASE_API_URL}/series/{slug}/chapters"
-        res = requests.get(url, headers=DEFAULT_HEADERS, timeout=10)
+        res = self.session.get(url, headers=DEFAULT_HEADERS, timeout=10)
         if res.status_code != 200:
             raise Exception(f"Failed to fetch chapter list. HTTP {res.status_code}")
         
@@ -62,7 +66,7 @@ class KomikcastScraper(BaseScraper):
     def get_chapter_details(self, slug, chapter_item):
         ch_index = chapter_item.get("data", {}).get("index") or chapter_item.get("index")
         url = f"{BASE_API_URL}/series/{slug}/chapters/{ch_index}"
-        res = requests.get(url, headers=DEFAULT_HEADERS, timeout=10)
+        res = self.session.get(url, headers=DEFAULT_HEADERS, timeout=10)
         if res.status_code != 200:
             raise Exception(f"Failed to fetch details for chapter {ch_index}. HTTP {res.status_code}")
         
@@ -82,7 +86,7 @@ class KomikcastScraper(BaseScraper):
             return True
         for attempt in range(retries):
             try:
-                res = requests.get(img_url, headers=DEFAULT_HEADERS, timeout=15)
+                res = self.session.get(img_url, headers=DEFAULT_HEADERS, timeout=15)
                 if res.status_code == 200 and len(res.content) > 0:
                     with open(save_path, "wb") as f:
                         f.write(res.content)
